@@ -7,10 +7,10 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+import swifter
 
 load_dotenv()
 
-# só necessário na primeira vez
 try:
     nltk.data.find('corpora/stopwords')
 except LookupError:
@@ -21,6 +21,11 @@ try:
 except LookupError:
     print("Baixando tokenizador punkt...")
     nltk.download('punkt')
+try:
+    nltk.data.find('tokenizers/punkt_tab')
+except LookupError:
+    print("Baixando tabelas 'punkt_tab' (necessário para idiomas)...")
+    nltk.download('punkt_tab')
 
 api_key = os.getenv("API_KEY")
 
@@ -119,38 +124,6 @@ def get_video_comments(VIDEO_ID, max_comments=None):
     print(f"Coleta finalizada ou interrompida. Total de comentários capturados: {len(comments)}")
     return comments
 
-print(f"Iniciando coleta de dados...")
-raw_comments = get_video_comments(VIDEO_ID=os.getenv("VIDEO_ID"))
-
-df = pd.DataFrame(raw_comments, columns=["comment", "date"])
-print(f"Total de comentários capturados: {len(df)}")
-
-def data_cleaning(df):
-    laughs = r'^((k+)|(ha)+|(rs)+|\s+)+$'
-    laughs_index = df['comment'].str.match(laughs, case=False, na=False)
-
-    emojis_and_blank = (
-        r'^['
-        r'\s'                     # Blank spaces
-        r'\U0001F600-\U0001F64F'  # Emoticons
-        r'\U0001F300-\U0001F5FF'  # Symbols & Pictographs
-        r'\U0001F680-\U0001F6FF'  # Transport & Map Symbols
-        r'\U0001F1E0-\U0001F1FF'  # Flags (iOS)
-        r'\U00002702-\U000027B0'
-        r'\U000024C2-\U0001F251'
-        r']+$'
-    )
-    emojis_blank_index = df['comment'].str.match(emojis_and_blank, na=False)
-
-    remove = laughs_index | emojis_blank_index
-
-    new_df = df[~remove].copy()
-
-    print(f"Total de comentários após filtro: {len(new_df)}")
-    return new_df
-
-df = data_cleaning(df)
-
 stopwords_portugues = set(stopwords.words('portuguese'))
 
 def cleaning_comments(text):
@@ -166,18 +139,59 @@ def cleaning_comments(text):
 
     return " ".join(filtred_tokens)
 
-df['clean_comment'] = df['comment'].apply(cleaning_comments)
+def data_cleaning(df):
+    laughs = r'^((k+)|(ha)+|(rs)+|\s+)+$'
 
+    emojis_and_blank = (
+        r'^['
+        r'\s'                     # Blank spaces
+        r'\U0001F600-\U0001F64F'  # Emoticons
+        r'\U0001F300-\U0001F5FF'  # Symbols & Pictographs
+        r'\U0001F680-\U0001F6FF'  # Transport & Map Symbols
+        r'\U0001F1E0-\U0001F1FF'  # Flags (iOS)
+        r'\U00002702-\U000027B0'
+        r'\U000024C2-\U0001F251'
+        r']+$'
+    )
 
-def save_csv(df, csv_path, csv_dir):
+    combined_regex = f"({laughs})|({emojis_and_blank})"
+
+    remove = df['comment'].str.match(combined_regex, case=False, na=False)
+
+    new_df = df[~remove].copy()
+
+    print(f"Total de comentários após filtro: {len(new_df)}")
+    return new_df
+
+def save_csv(df, csv_path_base, csv_dir, nome_sufixo, colunas_para_salvar):
+    final_path = csv_path_base.replace(".csv", nome_sufixo + ".csv")
+
     if not os.path.exists(csv_dir):
         os.makedirs(csv_dir)
-    columns = ['date', 'comment', 'clean_comment']
-    df.to_csv(csv_path, columns=columns, index=False, encoding="utf-8-sig")
-    print("Comentários salvos em " + csv_path)
-    return csv_path
+
+    try:
+        df.to_csv(final_path, columns=colunas_para_salvar, index=False, encoding="utf-8-sig")
+        print(f"Arquivo salvo com sucesso em: {final_path}")
+        return final_path
+    except KeyError:
+        print(f"Erro ao salvar CSV")
+        return None
 
 csv_path = os.getenv("LOCAL")
 csv_dir = os.path.dirname(csv_path)
 
-save_csv(df, csv_path, csv_dir)
+print(f"Iniciando coleta de dados...")
+raw_comments = get_video_comments(VIDEO_ID=os.getenv("VIDEO_ID1"), max_comments=100)
+df = pd.DataFrame(raw_comments, columns=["comment", "date"])
+print(f"Total de comentários capturados: {len(df)}")
+
+save_csv(df, csv_path, csv_dir, nome_sufixo="_bruto", colunas_para_salvar=['date', 'comment'])
+
+print("Iniciando limpeza e pré-processamento...")
+df_filtrado = data_cleaning(df)
+df_filtrado['clean_comment'] = df_filtrado['comment'].swifter.apply(cleaning_comments)
+
+print("Salvando arquivo csv final...")
+save_csv(df_filtrado, csv_path, csv_dir, nome_sufixo="_processado_final", colunas_para_salvar=['date', 'clean_comment'])
+
+print("Concluído")
