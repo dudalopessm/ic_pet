@@ -3,34 +3,12 @@ import os
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pandas as pd
-import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-import swifter
 
 load_dotenv()
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    print("Baixando stopwords...")
-    nltk.download('stopwords')
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    print("Baixando tokenizador punkt...")
-    nltk.download('punkt')
-try:
-    nltk.data.find('tokenizers/punkt_tab')
-except LookupError:
-    print("Baixando tabelas 'punkt_tab' (necessário para idiomas)...")
-    nltk.download('punkt_tab')
 
 api_key = os.getenv("API_KEY")
 
 youtube = build("youtube", "v3", developerKey=api_key)
-
 
 def get_video_comments(VIDEO_ID, max_comments=None):
     comments = []
@@ -124,45 +102,6 @@ def get_video_comments(VIDEO_ID, max_comments=None):
     print(f"Coleta finalizada ou interrompida. Total de comentários capturados: {len(comments)}")
     return comments
 
-stopwords_portugues = set(stopwords.words('portuguese'))
-
-def cleaning_comments(text):
-    if not isinstance(text, str):
-        return ""
-
-    lower_text = text.lower()
-    tokens = word_tokenize(lower_text, language='portuguese')
-    filtred_tokens = [
-        palavra for palavra in tokens 
-        if palavra.isalnum() and palavra not in stopwords_portugues
-    ]
-
-    return " ".join(filtred_tokens)
-
-def data_cleaning(df):
-    laughs = r'^((k+)|(ha)+|(rs)+|\s+)+$'
-
-    emojis_and_blank = (
-        r'^['
-        r'\s'                     # Blank spaces
-        r'\U0001F600-\U0001F64F'  # Emoticons
-        r'\U0001F300-\U0001F5FF'  # Symbols & Pictographs
-        r'\U0001F680-\U0001F6FF'  # Transport & Map Symbols
-        r'\U0001F1E0-\U0001F1FF'  # Flags (iOS)
-        r'\U00002702-\U000027B0'
-        r'\U000024C2-\U0001F251'
-        r']+$'
-    )
-
-    combined_regex = f"({laughs})|({emojis_and_blank})"
-
-    remove = df['comment'].str.match(combined_regex, case=False, na=False)
-
-    new_df = df[~remove].copy()
-
-    print(f"Total de comentários após filtro: {len(new_df)}")
-    return new_df
-
 def save_csv(df, csv_path_base, csv_dir, nome_sufixo, colunas_para_salvar):
     final_path = csv_path_base.replace(".csv", nome_sufixo + ".csv")
 
@@ -181,17 +120,8 @@ csv_path = os.getenv("LOCAL")
 csv_dir = os.path.dirname(csv_path)
 
 print(f"Iniciando coleta de dados...")
-raw_comments = get_video_comments(VIDEO_ID=os.getenv("VIDEO_ID1"), max_comments=100)
+raw_comments = get_video_comments(VIDEO_ID=os.getenv("VIDEO_ID1"))
 df = pd.DataFrame(raw_comments, columns=["comment", "date"])
 print(f"Total de comentários capturados: {len(df)}")
 
 save_csv(df, csv_path, csv_dir, nome_sufixo="_bruto", colunas_para_salvar=['date', 'comment'])
-
-print("Iniciando limpeza e pré-processamento...")
-df_filtrado = data_cleaning(df)
-df_filtrado['clean_comment'] = df_filtrado['comment'].swifter.apply(cleaning_comments)
-
-print("Salvando arquivo csv final...")
-save_csv(df_filtrado, csv_path, csv_dir, nome_sufixo="_processado_final", colunas_para_salvar=['date', 'clean_comment'])
-
-print("Concluído")
