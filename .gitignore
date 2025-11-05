@@ -1,3 +1,6 @@
 .env
 copilot-instructions.md
 venv*.csv
+plano_ic.pdf
+venv/
+.venv/
