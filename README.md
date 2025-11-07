@@ -143,4 +143,6 @@ SICSS. *Text Networks.* Disponível em: [https://sicss.io/2018/materials/day3-te
 
 VEGA, Diego; MAGNANI, Matteo. *Foundations of Temporal Text Networks.* *Applied Network Science*, v. 3, n. 25, 2018. DOI: [https://doi.org/10.1007/s41109-018-0082-3](https://doi.org/10.1007/s41109-018-0082-3). Disponível em: [https://appliednetsci.springeropen.com/articles/10.1007/s41109-018-0082-3](https://appliednetsci.springeropen.com/articles/10.1007/s41109-018-0082-3).
 
+AGGARWAL, Tushar. NetworkX: A Comprehensive Guide to Mastering Network Analysis with Python. Medium, 4 out. 2023. Disponível em: https://medium.com/@tushar_aggarwal/networkx-a-comprehensive-guide-to-mastering-network-analysis-with-python-fd7e5195f6a0.
+
 ---
