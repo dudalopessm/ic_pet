@@ -5,3 +5,4 @@ plano_ic.pdf
 venv/
 .venv/
 resumo_wtdcc_2025.pdf
+*.gexf
