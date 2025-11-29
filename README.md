@@ -98,34 +98,50 @@ A remoção completa desses elementos comprometeria a veracidade e integridade d
 
 ---
 
-## Status Atual
+## Primeira Rede Textual Gerada
 
-- ✅ Corpus coletado e organizado
-- ✅ Dados limpos e pré-processados
-- ⏳ Implementação de modelagens de redes textuais (em andamento)
+### Implementação Preliminar da Rede
 
----
+A fase inicial de prototipagem, no arquivo `first_network.py`, estabeleceu as bases metodológicas para a modelagem da rede. O processo iniciou-se com o pré-processamento textual utilizando a biblioteca SpaCy e o modelo de linguagem `pt_core_news_sm`. Nesta etapa, aplicou-se a lematização dos *tokens* visando a redução de variações morfológicas, seguida da exclusão de *tokens* com comprimento inferior a dois caracteres.
 
-## Dependências
-```bash
-pip install python-dotenv pandas nltk google-api-python-client tqdm
-```
+A estrutura da rede foi definida como um grafo não-direcionado (*NetworkX Graph*), fundamentado na co-ocorrência de palavras. A lógica de construção baseou-se na combinação par a par de todos os termos presentes em cada comentário, utilizando a função `itertools.combinations`. Os pesos das arestas foram incrementados proporcionalmente à frequência de aparição conjunta dos pares. Para refinar a topologia da rede, aplicaram-se filtros de exclusão para arestas com peso inferior a 2 e nós com grau menor que 2, com o objetivo de destacar pares recorrentes e eliminar termos isolados ou de baixa relevância estatística. Por fim, realizou-se a normalização dos pesos para a escala entre 0 e 1 em relação ao peso máximo da rede, exportando-se o resultado em formato GEXF (`coocorrencia_normalizada.gexf`) para posterior visualização no software Gephi.
 
-### Bibliotecas utilizadas:
-- `python-dotenv`: Gerenciamento de variáveis de ambiente
-- `pandas`: Manipulação e análise de dados
-- `nltk`: Processamento de linguagem natural
-- `google-api-python-client`: Acesso à YouTube Data API v3
-- `tqdm`: Barras de progresso para loops
+### Refinamento Metodológico para Apresentação Científica
 
-### Configuração do NLTK
+Visando a comunicação dos resultados em formato de pôster científico (`poster_network.ipynb`), desenvolveu-se uma versão aprimorada da rede. O pré-processamento avançado incorporou critérios mais rigorosos de seleção, incluindo um limiar de peso de aresta (*MIN\_EDGE\_WEIGHT*) de 15 e a restrição da análise aos 200 nós de maior relevância topológica (*TOP\_N\_NODES*). Adicionalmente, definiu-se um conjunto de *stop words* específico para o domínio, excluindo verbos genéricos e marcadores conversacionais que não agregam valor semântico ao discurso político.
 
-Após instalação, execute no Python:
-```python
-import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
-```
+O *pipeline* de processamento integrou a lematização otimizada, a filtragem manual de ruídos e a remoção de duplicatas intra-comentário. A construção do grafo ocorreu de maneira incremental, atualizando os pesos para conexões preexistentes. O refinamento estrutural envolveu o corte de conexões fracas, a exclusão de nós isolados e a seleção dos nós baseada na centralidade de grau. Restringiu-se a topologia final ao componente gigante conexo para assegurar a integridade da análise de comunidades.
+
+O grafo resultante consolidou-se com 200 nós representando os termos mais centrais e 10.564 conexões, caracterizando-se pela ausência de nós isolados ou componentes desconectados.
+
+### Análise de Comunidades e Métricas
+
+A identificação de subestruturas na rede foi realizada através do algoritmo de Louvain, configurado com resolução 1.0 e randomização ativa sobre os pesos normalizados (*norm\_weight*). A métrica de modularidade obtida foi de 0,0859, indicando o grau de segregação da rede em módulos distintos. Complementarmente, calcularam-se métricas de centralidade de grau para identificar os nós mais conectados, utilizando pesos normalizados para facilitar a análise comparativa.
+
+Através da análise qualitativa dos termos centrais em cada agrupamento, foram identificados quatro contextos discursivos principais, detalhados na tabela em data/tabela_poster_final_ordenada.png. 
+
+Para a representação visual no pôster, gerou-se uma tabela em alta resolução (300 dpi) utilizando a paleta de cores correspondente à visualização no Gephi e ordenando os contextos conforme a narrativa analítica desejada.
+
+### Conclusão
+
+Os resultados preliminares indicam uma rede densa composta pelos 200 termos mais centrais e mais de 10 mil conexões. A detecção de quatro comunidades distintas, com modularidade de 0.0859, permitiu mapear os principais eixos do debate. O contexto "Ataques a Políticos" (Verde) revela um discurso focado em ataques a uma figura política específica, enquanto a "Pauta Econômica/Social" (Roxo) referencia preocupações do cenário nacional. O "Discurso Moralizante" (Laranja) agrupa a opinião pública a favor de um candidato específico do debate, e a Mobilização Ideológica" (Azul) mostra, finalmente, a discussão sobre o assunto central do vídeo: corrupção. Conclui-se que apesar do tema principal do vídeo ser corrupção, há a ação de um grupo a favor de um político específico que domina quase 50% da rede com ataque ao político que está sendo interrogado no vídeo + defesa do interrogador. Assim, é possível concluir que o vídeo foi usado por um grupo dominante para atacar o opositor de seu político favorito, fugindo do assunto principal do vídeo e usando-o como palanque para a disseminação de opiniões sobre candidatos à presidência de 2022.
+
+## Infraestrutura Computacional e Organização do Projeto
+
+O desenvolvimento do projeto requer um ambiente Python configurado com um conjunto específico de bibliotecas. Utilizou-se o `python-dotenv` para gerenciamento seguro de variáveis de ambiente, `pandas` para manipulação tabular de dados e `tqdm` para monitoramento de processos iterativos. O núcleo do processamento de linguagem natural baseou-se no `nltk` e no `spacy` (modelo `pt_core_news_sm`), enquanto a coleta de dados foi intermediada pelo `google-api-python-client`. A modelagem e análise de redes complexas foram realizadas com `networkx` e `python-louvain`, sendo a visualização de dados suportada pelo `matplotlib`.
+
+A estrutura de arquivos do projeto organiza-se de forma modular, separando scripts de coleta (`youtube_scratch.py`), limpeza (`clean_data.py`) e modelagem de redes (`first_network.py`, `poster_network.ipynb`). Os dados brutos e processados, bem como os arquivos de grafo (.gexf) e visualizações finais, encontram-se alocados no diretório `data/`.
+
+## Andamento do Trabalho
+
+✅ **Coleta e Organização do Corpus**
+Finalizada a constituição da base de dados, composta por comentários de vídeos do YouTube selecionados para garantir a diversidade temática e temporal estipulada no plano de trabalho, estabelecendo o alicerce empírico para a investigação.
+
+✅ **Limpeza e Pré-processamento**
+Concluídos os protocolos de higienização, lematização e normalização textual. Esta etapa assegurou a integridade e a padronização dos dados, requisito fundamental para a aplicação precisa das diferentes técnicas de modelagem de redes.
+
+⏳ **Implementação e Análise Comparativa de Modelagens**
+Encontra-se em curso a expansão das técnicas de modelagem de redes textuais. Embora a análise exploratória via co-ocorrência tenha produzido resultados preliminares de comunidades léxicas, o trabalho prossegue com a implementação de variações nos critérios de construção (alternando unidades de análise, tipos de aresta como dependência sintática e janelas de contexto). Simultaneamente, avança-se para a aplicação de métricas estruturais e para a avaliação do desempenho destas topologias em tarefas de mineração de opinião, visando a futura comparação dos resultados e a elaboração das diretrizes metodológicas finais.
 
 ---
 
@@ -135,6 +151,8 @@ AGGARWAL, Tushar. *NetworkX: A comprehensive guide to mastering network analysis
 
 BIRD, Steven; KLEIN, Ewan; LOPER, Edward. *NLTK Documentation – Portuguese HOWTO.* Disponível em: [https://www.nltk.org/howto/portuguese_en.html](https://www.nltk.org/howto/portuguese_en.html). 
 
+BLONDEL, Vincent D. et al. *Fast unfolding of communities in large networks.* Journal of Statistical Mechanics: Theory and Experiment, v. 2008, n. 10, 2008.
+
 CARVALHO, André C. P. L. F. de; MENEZES, Ângelo G.; BONIDIA, Robson P. *Ciência de Dados: Fundamentos e Aplicações.* 1. ed. Rio de Janeiro: LTC, 2024. ISBN 9788521638766. E-book.
 
 GOOGLE DEVELOPERS. *YouTube Data API v3 – Comments: list.* Disponível em: [https://developers.google.com/youtube/v3/docs/comments/list?hl=pt-br](https://developers.google.com/youtube/v3/docs/comments/list?hl=pt-br). 
@@ -143,6 +161,8 @@ SICSS. *Text Networks.* Disponível em: [https://sicss.io/2018/materials/day3-te
 
 VEGA, Diego; MAGNANI, Matteo. *Foundations of Temporal Text Networks.* *Applied Network Science*, v. 3, n. 25, 2018. DOI: [https://doi.org/10.1007/s41109-018-0082-3](https://doi.org/10.1007/s41109-018-0082-3). Disponível em: [https://appliednetsci.springeropen.com/articles/10.1007/s41109-018-0082-3](https://appliednetsci.springeropen.com/articles/10.1007/s41109-018-0082-3).
 
-AGGARWAL, Tushar. NetworkX: A Comprehensive Guide to Mastering Network Analysis with Python. Medium, 4 out. 2023. Disponível em: https://medium.com/@tushar_aggarwal/networkx-a-comprehensive-guide-to-mastering-network-analysis-with-python-fd7e5195f6a0.
-
 ---
+
+## Licença e Contato
+
+Este projeto está sendo desenvolvido como parte de pesquisa acadêmica. Para mais informações ou colaborações, entre em contato através do repositório do projeto.
