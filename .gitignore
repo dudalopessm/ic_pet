@@ -4,3 +4,4 @@ plano_ic.pdf
 venv/
 .venv/
 *.gexf
+chroma.sqlite3
