@@ -1,27 +1,63 @@
-# Análise de Comentários de Vídeos do YouTube utilizando Redes Textuais
+# 📊 Análise de Comentários do YouTube via Redes Textuais
 
-## Contextualização
+[![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange?style=flat-square)]()
+[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=flat-square&logo=python)]()
+[![Licença](https://img.shields.io/badge/Licença-Acadêmica-green?style=flat-square)]()
 
-Este projeto investiga diferentes estratégias de modelagem de redes textuais aplicadas a comentários de vídeos do YouTube, com foco em mineração de opinião e análise exploratória. A literatura apresenta lacunas quanto ao impacto comparativo das diferentes abordagens de modelagem na qualidade das análises resultantes.
+> **Investigação comparativa de estratégias de modelagem de redes textuais em comentários do YouTube com foco em análise de opinião e padrões discursivos**
 
-## Objetivos
+---
 
-### Objetivo Geral
-Explorar técnicas de representação de redes textuais de forma comparativa, avaliando qual modelagem oferece melhor desempenho para tarefas específicas de análise.
+## 🎯 Contextualização
 
-### Objetivos Específicos
-- Coletar e organizar corpus de comentários do YouTube com diversidade temática e temporal
-- Implementar diferentes técnicas de modelagem de redes textuais (variando unidade de análise, tipo de aresta e janela de contexto)
-- Aplicar métricas de análise de redes (centralidade, modularidade, densidade)
-- Avaliar desempenho em tarefas de mineração de opinião
-- Conduzir análises exploratórias para identificação de comunidades léxicas e padrões discursivos
-- Comparar resultados e elaborar diretrizes metodológicas
+Este projeto de **Iniciação Científica** investiga diferentes estratégias de modelagem de redes textuais aplicadas a comentários de vídeos do YouTube, com foco em mineração de opinião e análise exploratória. A literatura apresenta lacunas quanto ao impacto comparativo das diferentes abordagens de modelagem na qualidade das análises resultantes.
 
-## Metodologia
+## 📋 Objetivos
+
+### 🎓 Objetivo Geral
+Explorar técnicas de representação de redes textuais de forma **comparativa**, avaliando qual modelagem oferece melhor desempenho para tarefas específicas de análise.
+
+### 🔍 Objetivos Específicos
+- ✅ Coletar e organizar corpus de comentários do YouTube com diversidade temática e temporal
+- ⏳ Implementar diferentes técnicas de modelagem de redes textuais (variando unidade de análise, tipo de aresta e janela de contexto)
+- ⏳ Aplicar métricas de análise de redes (centralidade, modularidade, densidade)
+- ⏳ Avaliar desempenho em tarefas de mineração de opinião
+- ⏳ Conduzir análises exploratórias para identificação de comunidades léxicas e padrões discursivos
+- ⏳ Comparar resultados e elaborar diretrizes metodológicas
+
+---
+
+## 📊 Dashboard de Progresso
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     ANDAMENTO DO PROJETO 2025                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  1️⃣  Coleta e Organização de Dados               ████████████ 100% │
+│  2️⃣  Limpeza e Pré-processamento                 ████████████ 100% │
+│  3️⃣  Primeira Rede Textual (Co-ocorrência)       ████████████ 100% │
+│  4️⃣  Análise de Comunidades                       ████████████ 100% │
+│  5️⃣  Implementação de Redes Alternativas         ████░░░░░░░░  40% │
+│  6️⃣  Análise Comparativa de Modelagens           ░░░░░░░░░░░░   0% │
+│  7️⃣  Mineração de Opinião & Avaliação             ░░░░░░░░░░░░   0% │
+│  8️⃣  Redação e Apresentação Final                 ░░░░░░░░░░░░   0% │
+│                                                                     │
+│  Total: 37.5% do projeto                                            │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+✅ CONCLUÍDO     ⏳ EM DESENVOLVIMENTO     ⏹️  PLANEJADO
+```
+
+---
+
+## 🛠️ Metodologia
 
 ### Técnicas de Modelagem
 - **Unidades de análise**: palavras vs sentenças
 - **Tipos de aresta**: co-ocorrência, dependência sintática, distância lexical
+- **Janelas de contexto**: variações de tamanho
 
 ### Tarefas de Avaliação
 - Mineração de opinião (polaridade, subjetividade)
@@ -29,140 +65,386 @@ Explorar técnicas de representação de redes textuais de forma comparativa, av
 
 ---
 
-## Coleta e Pré-processamento dos Dados
+## 📈 Etapa 1: Coleta e Pré-processamento dos Dados
 
-### Seleção do Corpus
+### 📑 Seleção do Corpus
 
-Inicialmente, identificou-se a necessidade de um conjunto de dados volumoso para evidenciar a polarização de opiniões na rede textual. Após busca por temas polêmicos no YouTube, o vídeo "‹ CORTANDO O BOTÃO DO YOUTUBE ›" do youtuber Aruan Felix foi considerado: publicado há 9 anos, possui 29 milhões de visualizações e 582331 comentários. Apesar de representar um tema marcante, a recuperação completa dos comentários mostrou-se inviável devido às limitações da cota diária da API do YouTube.
+Inicialmente, buscou-se um conjunto de dados volumoso em tema polêmico no YouTube. O vídeo "‹ CORTANDO O BOTÃO DO YOUTUBE ›" (29M visualizações, 582K comentários) mostrou-se inviável devido às limitações de quota da API.
 
-Diante dessa restrição, optou-se pelo vídeo "Bolsonaro pergunta para Lula sobre corrupção na Petrobras | Band Eleições - Debate Presidencial 2022" do canal Band Jornalismo. Publicado há 3 anos, o vídeo possui 9,6 milhões de visualizações e 53831 comentários. Embora represente uma redução de aproximadamente 10 vezes no volume de dados, a natureza inerentemente polarizada do debate político compensaria a menor quantidade de comentários, garantindo a presença de opiniões divergentes necessárias para a análise.
+**Corpus Final Selecionado:**
 
-**Vídeo selecionado:**
-- Título: "Bolsonaro pergunta para Lula sobre corrupção na Petrobras | Band Eleições - Debate Presidencial 2022"
-- Canal: Band Jornalismo
-- Visualizações: 9,6 milhões
-- Comentários: 53831
-- Ano: 2022
+| Propriedade | Valor |
+|:---|:---|
+| **Título** | Bolsonaro pergunta para Lula sobre corrupção na Petrobras \| Band Eleições - Debate Presidencial 2022 |
+| **Canal** | Band Jornalismo |
+| **Visualizações** | 9,6 milhões |
+| **Comentários Coletados** | 53.831 |
+| **Data** | 2022 |
+| **Justificativa** | Tema inerentemente polarizado garante opiniões divergentes |
 
-### Configuração do Ambiente
+### ✅ Configuração do Ambiente
 
-O ambiente de desenvolvimento foi estruturado com:
-- Ambiente virtual Python
-- Dependências necessárias instaladas
-- Arquivo `.env` configurado contendo:
-  - Chave da API do YouTube
-  - Caminhos para salvamento dos arquivos CSV
-  - Código identificador do vídeo
+- ✓ Ambiente virtual Python
+- ✓ Dependências instaladas (NLTK, SpaCy, NetworkX, Pandas, etc)
+- ✓ Arquivo `.env` com credenciais e caminhos
+- ✓ Conectividade com YouTube Data API v3
 
-### Extração dos Dados
+### 📥 Etapa 1.1: Extração dos Dados
 
-**Arquivo:** `youtube_scratch.py`
+**Arquivo:** [`python_scripts/data_mining/youtube_scratch.py`](python_scripts/data_mining/youtube_scratch.py)
 
-A extração foi realizada utilizando a YouTube Data API v3. O processo envolveu:
+Implementação utilizando **YouTube Data API v3**:
 
-1. Recuperação dos comentários principais através da função `commentThreads().list()`, obtendo conteúdo e datas de publicação
-2. Para cada comentário principal recuperado, utilização da função `comments().list()` para recuperação de todas as respostas associadas
-3. Armazenamento temporário dos dados em DataFrame do Pandas
-4. Exportação completa para arquivo CSV
+```
+┌──────────────────────────────────────────────────────┐
+│  1. Recuperação de Comentários Principais           │
+│     └─► commentThreads().list()                     │
+│         └─ Metadados: autor, data, conteúdo         │
+├──────────────────────────────────────────────────────┤
+│  2. Recuperação de Respostas (Replies)              │
+│     └─► comments().list()                           │
+│         └─ Associação com comentário pai            │
+├──────────────────────────────────────────────────────┤
+│  3. Armazenamento em DataFrame Pandas               │
+├──────────────────────────────────────────────────────┤
+│  4. Exportação para CSV                             │
+│     📄 comentarios_bruto.csv (53.831 rows)          │
+└──────────────────────────────────────────────────────┘
 
-**Resultado:** Conjunto bruto de 53831 comentários recuperados com sucesso.
+RESULTADO: ✅ 53.831 comentários recuperados
+```
 
-### Limpeza e Pré-processamento
+### 🔧 Etapa 1.2: Limpeza e Pré-processamento
 
-**Arquivo:** `clean_data.py`
+**Arquivo:** [`python_scripts/pre_processing/clean_data.py`](python_scripts/pre_processing/clean_data.py)
 
-Os dados brutos apresentavam inconsistências típicas de textos de redes sociais. Para tratamento, utilizou-se a biblioteca NLTK (Natural Language Toolkit).
+Tratamento com **NLTK (Natural Language Toolkit)**:
 
-**Processo de limpeza:**
+#### Pipeline de Limpeza
 
-1. **Stopwords**: Utilização da lista de stopwords em português-BR fornecida pela NLTK, contendo 207 palavras (lista completa disponível via `print(sorted(stopwords_portugues))` no arquivo `clean_data.py`)
+| # | Etapa | Ferramenta | Resultado |
+|:---:|:---|:---|:---|
+| 1 | Normalização | `lower()` | Uniformização de texto |
+| 2 | Tokenização | `word_tokenize()` | Segmentação em palavras |
+| 3 | Remove Stopwords | 207 palavras PT-BR | Eliminação de ruído semântico |
+| 4 | Filtragem | `isalnum()` | Apenas tokens válidos |
+| 5 | Validação | Checagem de vazios | Garantia de integridade |
 
-2. **Função `cleaning_comments()`**: 
-   - Recebe conteúdo bruto do comentário
-   - Converte para minúsculas
-   - Remove acentuação
-   - Remove stopwords
-   - Tokenização através de `word_tokenize()`
-   - Filtragem: mantém apenas tokens alfanuméricos não presentes na lista de stopwords
-   - Retorna comentário limpo com tokens unidos por espaços
+**Resultado:** ✅ `comentarios_processados.csv` (53.831 linhas)
 
-3. **Exportação**: Salvamento dos comentários processados em novo arquivo CSV
+#### ⚠️ Limitações Conhecidas
 
-### Considerações sobre a Qualidade dos Dados
+Após limpeza, permanecem:
+- Menções a usuários (@username)
+- Comentários spam (aleatórios)
 
-Após o processo de limpeza, observa-se que alguns elementos indesejados permanecem no conjunto de dados:
-- Menções a nomes de usuário (@username)
-- Comentários spam (combinações aleatórias de números e letras)
-
-A remoção completa desses elementos comprometeria a veracidade e integridade do corpus. Avalia-se que sua presença não prejudicará significativamente as etapas subsequentes de modelagem e análise de redes textuais.
-
----
-
-## Primeira Rede Textual Gerada
-
-### Implementação Preliminar da Rede
-
-A fase inicial de prototipagem, no arquivo `first_network.py`, estabeleceu as bases metodológicas para a modelagem da rede. O processo iniciou-se com o pré-processamento textual utilizando a biblioteca SpaCy e o modelo de linguagem `pt_core_news_sm`. Nesta etapa, aplicou-se a lematização dos *tokens* visando a redução de variações morfológicas, seguida da exclusão de *tokens* com comprimento inferior a dois caracteres.
-
-A estrutura da rede foi definida como um grafo não-direcionado (*NetworkX Graph*), fundamentado na co-ocorrência de palavras. A lógica de construção baseou-se na combinação par a par de todos os termos presentes em cada comentário, utilizando a função `itertools.combinations`. Os pesos das arestas foram incrementados proporcionalmente à frequência de aparição conjunta dos pares. Para refinar a topologia da rede, aplicaram-se filtros de exclusão para arestas com peso inferior a 2 e nós com grau menor que 2, com o objetivo de destacar pares recorrentes e eliminar termos isolados ou de baixa relevância estatística. Por fim, realizou-se a normalização dos pesos para a escala entre 0 e 1 em relação ao peso máximo da rede, exportando-se o resultado em formato GEXF (`coocorrencia_normalizada.gexf`) para posterior visualização no software Gephi.
-
-### Refinamento Metodológico para Apresentação Científica
-
-Visando a comunicação dos resultados em formato de pôster científico (`poster_network.ipynb`), desenvolveu-se uma versão aprimorada da rede. O pré-processamento avançado incorporou critérios mais rigorosos de seleção, incluindo um limiar de peso de aresta (*MIN\_EDGE\_WEIGHT*) de 15 e a restrição da análise aos 200 nós de maior relevância topológica (*TOP\_N\_NODES*). Adicionalmente, definiu-se um conjunto de *stop words* específico para o domínio, excluindo verbos genéricos e marcadores conversacionais que não agregam valor semântico ao discurso político.
-
-O *pipeline* de processamento integrou a lematização otimizada, a filtragem manual de ruídos e a remoção de duplicatas intra-comentário. A construção do grafo ocorreu de maneira incremental, atualizando os pesos para conexões preexistentes. O refinamento estrutural envolveu o corte de conexões fracas, a exclusão de nós isolados e a seleção dos nós baseada na centralidade de grau. Restringiu-se a topologia final ao componente gigante conexo para assegurar a integridade da análise de comunidades.
-
-O grafo resultante consolidou-se com 200 nós representando os termos mais centrais e 10.564 conexões, caracterizando-se pela ausência de nós isolados ou componentes desconectados.
-
-### Análise de Comunidades e Métricas
-
-A identificação de subestruturas na rede foi realizada através do algoritmo de Louvain, configurado com resolução 1.0 e randomização ativa sobre os pesos normalizados (*norm\_weight*). A métrica de modularidade obtida foi de 0,0859, indicando o grau de segregação da rede em módulos distintos. Complementarmente, calcularam-se métricas de centralidade de grau para identificar os nós mais conectados, utilizando pesos normalizados para facilitar a análise comparativa.
-
-Através da análise qualitativa dos termos centrais em cada agrupamento, foram identificados quatro contextos discursivos principais, detalhados na tabela em data/tabela_poster_final_ordenada.png. 
-
-Para a representação visual no pôster, gerou-se uma tabela em alta resolução (300 dpi) utilizando a paleta de cores correspondente à visualização no Gephi e ordenando os contextos conforme a narrativa analítica desejada.
-
-### Conclusão
-
-Os resultados preliminares indicam uma rede densa composta pelos 200 termos mais centrais e mais de 10 mil conexões. A detecção de quatro comunidades distintas, com modularidade de 0.0859, permitiu mapear os principais eixos do debate. O contexto "Ataques a Políticos" (Verde) revela um discurso focado em ataques a uma figura política específica, enquanto a "Pauta Econômica/Social" (Roxo) referencia preocupações do cenário nacional. O "Discurso Moralizante" (Laranja) agrupa a opinião pública a favor de um candidato específico do debate, e a Mobilização Ideológica" (Azul) mostra, finalmente, a discussão sobre o assunto central do vídeo: corrupção. Conclui-se que apesar do tema principal do vídeo ser corrupção, há a ação de um grupo a favor de um político específico que domina quase 50% da rede com ataque ao político que está sendo interrogado no vídeo + defesa do interrogador. Assim, é possível concluir que o vídeo foi usado por um grupo dominante para atacar o opositor de seu político favorito, fugindo do assunto principal do vídeo e usando-o como palanque para a disseminação de opiniões sobre candidatos à presidência de 2022.
-
-## Infraestrutura Computacional e Organização do Projeto
-
-O desenvolvimento do projeto requer um ambiente Python configurado com um conjunto específico de bibliotecas. Utilizou-se o `python-dotenv` para gerenciamento seguro de variáveis de ambiente, `pandas` para manipulação tabular de dados e `tqdm` para monitoramento de processos iterativos. O núcleo do processamento de linguagem natural baseou-se no `nltk` e no `spacy` (modelo `pt_core_news_sm`), enquanto a coleta de dados foi intermediada pelo `google-api-python-client`. A modelagem e análise de redes complexas foram realizadas com `networkx` e `python-louvain`, sendo a visualização de dados suportada pelo `matplotlib`.
-
-A estrutura de arquivos do projeto organiza-se de forma modular, separando scripts de coleta (`youtube_scratch.py`), limpeza (`clean_data.py`) e modelagem de redes (`first_network.py`, `poster_network.ipynb`). Os dados brutos e processados, bem como os arquivos de grafo (.gexf) e visualizações finais, encontram-se alocados no diretório `data/`.
-
-## Andamento do Trabalho
-
-✅ **Coleta e Organização do Corpus**
-Finalizada a constituição da base de dados, composta por comentários de vídeos do YouTube selecionados para garantir a diversidade temática e temporal estipulada no plano de trabalho, estabelecendo o alicerce empírico para a investigação.
-
-✅ **Limpeza e Pré-processamento**
-Concluídos os protocolos de higienização, lematização e normalização textual. Esta etapa assegurou a integridade e a padronização dos dados, requisito fundamental para a aplicação precisa das diferentes técnicas de modelagem de redes.
-
-⏳ **Implementação e Análise Comparativa de Modelagens**
-Encontra-se em curso a expansão das técnicas de modelagem de redes textuais. Embora a análise exploratória via co-ocorrência tenha produzido resultados preliminares de comunidades léxicas, o trabalho prossegue com a implementação de variações nos critérios de construção (alternando unidades de análise, tipos de aresta como dependência sintática e janelas de contexto). Simultaneamente, avança-se para a aplicação de métricas estruturais e para a avaliação do desempenho destas topologias em tarefas de mineração de opinião, visando a futura comparação dos resultados e a elaboração das diretrizes metodológicas finais.
+*Avaliação: Presença não prejudica análises subsequentes*
 
 ---
 
-## Referências
+## 🕸️ Etapa 2-4: Modelagem de Redes Textuais
 
-AGGARWAL, Tushar. *NetworkX: A comprehensive guide to mastering network analysis with Python.* Medium, 2023. Disponível em: [https://medium.com/@tushar_aggarwal/networkx-a-comprehensive-guide-to-mastering-network-analysis-with-python-fd7e5195f6a0](https://medium.com/@tushar_aggarwal/networkx-a-comprehensive-guide-to-mastering-network-analysis-with-python-fd7e5195f6a0). 
+### 1️⃣ Primeira Rede: Co-ocorrência Simples
 
-BIRD, Steven; KLEIN, Ewan; LOPER, Edward. *NLTK Documentation – Portuguese HOWTO.* Disponível em: [https://www.nltk.org/howto/portuguese_en.html](https://www.nltk.org/howto/portuguese_en.html). 
+**Arquivo:** [`python_scripts/text_network/first_network.py`](python_scripts/text_network/first_network.py)
 
-BLONDEL, Vincent D. et al. *Fast unfolding of communities in large networks.* Journal of Statistical Mechanics: Theory and Experiment, v. 2008, n. 10, 2008.
+Prototipagem estabelecendo bases metodológicas:
 
-CARVALHO, André C. P. L. F. de; MENEZES, Ângelo G.; BONIDIA, Robson P. *Ciência de Dados: Fundamentos e Aplicações.* 1. ed. Rio de Janeiro: LTC, 2024. ISBN 9788521638766. E-book.
+```
+ENTRADA: comentarios_processados.csv (53.831)
+    │
+    ├─► SpaCy pt_core_news_sm
+    │   • Lematização de tokens
+    │   • Exclusão de tokens < 2 caracteres
+    │
+    ├─► Construção do Grafo
+    │   • Grafo não-direcionado (NetworkX)
+    │   • Aresta = co-ocorrência de palavras
+    │   • Peso = frequência conjunta
+    │   • Método: itertools.combinations()
+    │
+    ├─► Filtragem de Ruído
+    │   • Remove: peso < 2, grau < 2
+    │   • Normaliza pesos para [0, 1]
+    │
+    └─► SAÍDA: coocorrencia_normalizada.gexf
+        (Pronto para Gephi)
+```
 
-GOOGLE DEVELOPERS. *YouTube Data API v3 – Comments: list.* Disponível em: [https://developers.google.com/youtube/v3/docs/comments/list?hl=pt-br](https://developers.google.com/youtube/v3/docs/comments/list?hl=pt-br). 
-
-SICSS. *Text Networks.* Disponível em: [https://sicss.io/2018/materials/day3-text-analysis/text-networks/rmarkdown/SICSS_Text_Networks.html](https://sicss.io/2018/materials/day3-text-analysis/text-networks/rmarkdown/SICSS_Text_Networks.html). 
-
-VEGA, Diego; MAGNANI, Matteo. *Foundations of Temporal Text Networks.* *Applied Network Science*, v. 3, n. 25, 2018. DOI: [https://doi.org/10.1007/s41109-018-0082-3](https://doi.org/10.1007/s41109-018-0082-3). Disponível em: [https://appliednetsci.springeropen.com/articles/10.1007/s41109-018-0082-3](https://appliednetsci.springeropen.com/articles/10.1007/s41109-018-0082-3).
+**Status:** ✅ Concluído
 
 ---
 
-## Licença e Contato
+### Apresentação WTDCC 2025
 
-Este projeto está sendo desenvolvido como parte de pesquisa acadêmica. Para mais informações ou colaborações, entre em contato através do repositório do projeto.
+**Arquivo:** [`python_scripts/text_network/poster_network.ipynb`](python_scripts/text_network/poster_network.ipynb)
+
+Versão aprimorada com critérios rigorosos:
+
+#### 📊 Configuração
+
+| Parâmetro | Valor | Objetivo |
+|:---|:---:|:---|
+| **MIN_EDGE_WEIGHT** | 15 | Conexões fortes apenas |
+| **TOP_N_NODES** | 200 | Termos principais |
+| **Algoritmo** | Louvain | Detecção de comunidades |
+| **Resolução** | 1.0 | Granularidade equilibrada |
+
+#### 🔬 Pipeline Completo
+
+1. Lematização otimizada
+2. Filtragem manual de ruídos
+3. Remoção de duplicatas intra-comentário
+4. Construção incremental de grafo
+5. Corte de conexões fracas
+6. Seleção por centralidade de grau
+7. Extração de componente gigante conexo
+
+#### 📈 Resultados Finais
+
+| Métrica | Valor |
+|:---|:---:|
+| **Nós** | 200 |
+| **Arestas** | 10.564 |
+| **Modularidade** | 0,0859 |
+| **Comunidades** | 4 |
+| **Densidade** | Alta |
+
+#### 🎨 Comunidades Identificadas
+
+```
+┌─────────────────────────────────────────────────┐
+│     ESTRUTURA DO DEBATE (4 COMUNIDADES)         │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│ 🟢 VERDE: Ataques a Políticos                   │
+│    └─ Crítica focada em figura política         │
+│                                                 │
+│ 🟣 ROXO: Pauta Econômica/Social                │
+│    └─ Preocupações do cenário nacional          │
+│                                                 │
+│ 🟠 LARANJA: Discurso Moralizante               │
+│    └─ Opinião favorável a candidato específico  │
+│                                                 │
+│ 🔵 AZUL: Mobilização Ideológica                │
+│    └─ Discussão sobre corrupção (tema central)  │
+│                                                 │
+│ ⚠️  ~50% da rede dominada por grupo que          │
+│    desvirtua tema para ataque político          │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+#### 💡 Interpretação dos Achados
+
+O vídeo sobre corrupção foi usado como **palanque político**:
+
+- ✘ Desvirtua tema principal do debate
+- ✘ Concentra-se em ataque ao político interrogado
+- ✘ Defende outro político de forma moralizante
+- ✘ Marginaliza pauta econômica/social
+
+**Conclusão:** O debate foi apropriado por grupo dominante para disseminação de opiniões sobre candidatos presidenciais.
+
+**Status:** ✅ Concluído e documentado
+
+---
+
+### 3️⃣ Embeddings Semânticos (EM DESENVOLVIMENTO)
+
+**Arquivo:** [`python_scripts/text_network/embedding.py`](python_scripts/text_network/embedding.py)
+
+Representações contínuas dos textos:
+
+#### 🎯 Abordagem
+
+```python
+from sentence_transformers import SentenceTransformer
+
+# Modelo multilíngue
+model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+embeddings = model.encode(comentarios)
+```
+
+#### 📌 Objetivos
+
+- [ ] Criar vetores de similaridade semântica
+- [ ] Clustering de opiniões por tema
+- [ ] Base para redes de dependência semântica
+- [ ] Análise de evolução de tópicos
+
+#### 🗄️ Armazenamento
+
+- **Banco:** ChromaDB (vector store)
+- **Persistência:** `data/chroma.sqlite3`
+- **Indexação:** Automática com vetores
+
+**Status:** ⏳ Em desenvolvimento
+
+---
+
+## 📋 Estrutura do Projeto
+
+```
+📦 ic/
+├── 📄 README.md (este arquivo)
+├── 📄 plano_ic.pdf
+├── 🐍 python_scripts/
+│   ├── data_mining/
+│   │   └── youtube_scratch.py          ✅ Coleta de dados
+│   ├── pre_processing/
+│   │   └── clean_data.py               ✅ Limpeza
+│   └── text_network/
+│       ├── embedding.py                ⏳ Em desenvolvimento
+│       ├── first_network.py            ✅ Primeira rede
+│       ├── poster_network.ipynb        ✅ Rede refinada
+│       └── testing.py                  🧪 Testes
+├── 📊 data/
+│   ├── chroma.sqlite3                  (vector store)
+│   ├── comentarios_bruto.csv           (53.831 comentários)
+│   ├── comentarios_processados.csv     (53.831 limpos)
+│   ├── grafo_poster.gexf               (rede visualizável)
+│   └── f0c2082e-75b1.../              (cache Chroma)
+└── 🎓 wtdcc_2025/                       (conferência)
+```
+
+---
+
+## 🔧 Instalação e Configuração
+
+### 📋 Dependências do Projeto
+
+Todas as bibliotecas necessárias estão listadas em [`requirements.txt`](requirements.txt) com suas versões específicas:
+
+```
+python-dotenv          # Variáveis de ambiente
+pandas                 # Manipulação de dados
+tqdm                   # Barras de progresso
+nltk                   # NLP em português
+spacy                  # Lematização
+pt_core_news_sm        # Modelo SpaCy PT
+google-api-python-client  # API do YouTube
+networkx               # Análise de redes
+python-louvain         # Detecção de comunidades
+sentence-transformers  # Embeddings
+chromadb               # Vector store
+matplotlib             # Visualizações
+```
+
+### 🚀 Passo a Passo de Instalação
+
+#### 1. Clone o Repositório
+
+```bash
+cd /home/eduarda/faculdade/ic
+```
+
+#### 2. Crie um Ambiente Virtual
+
+```bash
+# Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
+
+#### 3. Instale as Dependências do requirements.txt
+
+```bash
+# Upgrade do pip (recomendado)
+pip install --upgrade pip
+
+# Instalação de todas as bibliotecas
+pip install -r requirements.txt
+```
+
+#### 4. Baixe o Modelo SpaCy para Português
+
+```bash
+python -m spacy download pt_core_news_sm
+```
+
+#### 5. Configure as Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto com:
+
+```bash
+API_KEY=seu_api_key_aqui
+VIDEO_ID=id_do_video
+CLEAN_COMMENTS_PATH=./data/comentarios_processados.csv
+DATA_PATH=./data/
+```
+
+### ✅ Verificação da Instalação
+
+Para verificar se tudo foi instalado corretamente:
+
+```bash
+python -c "import pandas; import nltk; import spacy; import networkx; print('✅ Todas as bibliotecas instaladas com sucesso!')"
+```
+
+### 📦 Arquivo requirements.txt
+
+O arquivo [`requirements.txt`](requirements.txt) contém:
+
+- **Versões específicas** de cada biblioteca para garantir compatibilidade
+- **Comentários organizados** por categoria (dados, NLP, redes, etc)
+- **Notas importantes** sobre downloads adicionais necessários
+
+Para adicionar novas dependências, edite o arquivo e reinstale:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### Análise Comparativa
+
+- [ ] Métricas estruturais de redes
+- [ ] Centralidade, clusterização, diâmetro
+- [ ] Comparação de resultados entre modelagens
+- [ ] Tabelas e gráficos comparativos
+
+### Mineração de Opinião
+
+- [ ] Análise de polaridade
+- [ ] Detecção de subjetividade
+- [ ] Correlação com estrutura de rede
+- [ ] Avaliação de desempenho
+
+### Redação Final
+
+- [ ] Integração de resultados
+- [ ] Elaboração de diretrizes metodológicas
+- [ ] Documentação final
+- [ ] Apresentação/Publicação
+
+---
+
+## 📚 Referências
+
+AGGARWAL, Tushar. *NetworkX: A comprehensive guide to mastering network analysis with Python.* Medium, 2023.
+
+BIRD, Steven; KLEIN, Ewan; LOPER, Edward. *NLTK Documentation – Portuguese HOWTO.* [https://www.nltk.org/howto/portuguese_en.html](https://www.nltk.org/howto/portuguese_en.html)
+
+BLONDEL, Vincent D. et al. *Fast unfolding of communities in large networks.* Journal of Statistical Mechanics, v. 2008, n. 10, 2008.
+
+CARVALHO, André C. P. L. F. de; MENEZES, Ângelo G.; BONIDIA, Robson P. *Ciência de Dados: Fundamentos e Aplicações.* 1. ed. LTC, 2024.
+
+GOOGLE DEVELOPERS. *YouTube Data API v3 – Comments.* [https://developers.google.com/youtube/v3/docs/comments/list](https://developers.google.com/youtube/v3/docs/comments/list)
+
+SICSS. *Text Networks.* [https://sicss.io/2018/materials/day3-text-analysis/text-networks/](https://sicss.io/2018/materials/day3-text-analysis/text-networks/)
+
+VEGA, Diego; MAGNANI, Matteo. *Foundations of Temporal Text Networks.* Applied Network Science, v. 3, n. 25, 2018. DOI: [10.1007/s41109-018-0082-3](https://doi.org/10.1007/s41109-018-0082-3)
+
+---
+
+## 📄 Licenças
+
+Este projeto está sendo desenvolvido como parte de pesquisa acadêmica e com apoio da Universidade Federal de Uberlândia e do YouTube Researcher Program.
+
+Para mais informações ou colaborações, entre em contato através do repositório.
