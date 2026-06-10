@@ -5,3 +5,5 @@ venv/
 .venv/
 *.gexf
 chroma.sqlite3
+data/chromadb/
+data/outputs/
